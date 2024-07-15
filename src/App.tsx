@@ -7,7 +7,6 @@ import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 import { GithubProvider } from "./context/github/GithubContext";
 import { AlertProvider } from "./context/alert/AlertContext";
-import Alert from "./components/layout/Alert";
 import User from "./pages/User";
 
 function App() {
@@ -15,19 +14,11 @@ function App() {
     <GithubProvider>
       <AlertProvider>
         <Router>
-          <div className="flex flex-col justify-between h-screen">
+          <div className="flex flex-col justify-between min-h-screen">
             <Navbar />
-            <main className="container px-3 pb-3 mx-auto">
+            <main className="container h-[100%] flex-grow px-3 pb-3 mx-auto max-h-max">
               <Routes>
-                <Route
-                  path="/"
-                  element={
-                    <>
-                      <Alert />
-                      <Home />
-                    </>
-                  }
-                />
+                <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/user/:login" element={<User />} />
                 <Route path="/notfound" element={<NotFound />} />
