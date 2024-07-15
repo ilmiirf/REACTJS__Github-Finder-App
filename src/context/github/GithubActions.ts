@@ -14,3 +14,29 @@ export const searchUsers = async (text: string): Promise<UsersType> => {
 
   return items;
 };
+
+export const getUser = async (login: string) => {
+  const response = await fetch(`${GITHUB_URL}/users/${login}`);
+
+  if (response.status === 404) {
+    console.log(response.status);
+    window.location.href = "/notfound";
+  } else {
+    const data = await response.json();
+    console.log(data);
+    return data;
+  }
+};
+
+export const getUserRepos = async (login: string) => {
+  const params = new URLSearchParams({
+    sort: "created",
+    per_page: "10",
+  });
+
+  const response = await fetch(`${GITHUB_URL}/users/${login}/repos?${params}`);
+
+  const data = await response.json();
+  console.log(data);
+  return data;
+};
