@@ -1,4 +1,4 @@
-import { GithubStateType, GithubActionType } from "./GithubContext";
+import { GithubActionType, GithubStateType } from "../../types/user";
 
 const githubReducer = (
   state: GithubStateType,

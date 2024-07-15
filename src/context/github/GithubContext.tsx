@@ -1,56 +1,29 @@
-import { createContext, useState } from "react";
+import React, { useReducer } from "react";
+import githubReducer from "./GithubReducer";
 import { GithubStateType } from "../../types/user";
 
 const initialState: GithubStateType = {
   users: [],
   user: {},
+  repos: [],
   loading: false,
   dispatch: () => {},
 };
 
-const GithubContext = createContext<GithubStateType>(initialState);
+const GithubContext = React.createContext<GithubStateType>(initialState);
 
-const GITHUB_URL = import.meta.env.VITE_REACT_APP_GITHUB_URL;
-
-export const GithubProvider = ({ children }: { children: React.ReactNode }) => {
+export const GithubProvider = ({
+  children,
+}: {
+  children?: React.ReactNode;
+}): JSX.Element => {
   const [state, dispatch] = useReducer(githubReducer, initialState);
-
-  const fetchUsers = async () => {
-    setLoading();
-    const response = await fetch(`${GITHUB_URL}/users`);
-
-    const data = await response.json();
-
-    dispatch({ type: "GET_USERS", payload: { users: data } });
-  };
-
-  const searchUsers = async (text: string) => {
-    setLoading();
-    const params = new URLSearchParams({
-      q: text,
-    });
-    const response = await fetch(`${GITHUB_URL}/search/users?${params}`);
-    const { items } = await response.json();
-
-    dispatch({ type: "GET_USERS", payload: { users: items } });
-  };
-
-  const clearUsers = () => {
-    dispatch({ type: "CLEAR_USERS" });
-  };
-
-  const setLoading = () => {
-    dispatch({ type: "SET_LOADING" });
-  };
 
   return (
     <GithubContext.Provider
       value={{
-        users: state.users,
-        loading: state.loading,
-        fetchUsers,
-        searchUsers,
-        clearUsers,
+        ...state,
+        dispatch,
       }}
     >
       {children}
