@@ -1,27 +1,58 @@
-import { useContext, useEffect } from "react";
-import type { User } from "../../types/user";
-import Spinner from "../layout/Spinner";
-import UserItem from "./UserItem";
+import { useState, useContext } from "react";
 import GithubContext from "../../context/github/GithubContext";
 
-const UserResults = () => {
-  const { users, loading, fetchUsers } = useContext(GithubContext);
+export default function UserSearch(): JSX.Element {
+  const [text, setText] = useState("");
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  const { users, loading } = useContext(GithubContext);
 
-  if (loading) {
-    return <Spinner />;
-  } else {
-    return (
-      <div className="grid grid-cols-1 gap-8 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2">
-        {users.map((user: User) => (
-          <UserItem key={user.id} {...user} />
-        ))}
+  const handleChange = (e) => setText(e.target.value);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (text === "") {
+      alert("Please enter something");
+    } else {
+      // @todo - search users
+
+      setText("");
+    }
+  };
+
+  return (
+    <div className="grid grid-cols-1 gap-8 mb-8 xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-2">
+      <div>
+        <form onSubmit={handleSubmit}>
+          <div className="form-control">
+            <div className="relative">
+              <input
+                type="text"
+                className="w-full pr-40 text-black bg-gray-200 input input-lg"
+                placeholder="Search"
+                value={text}
+                onChange={handleChange}
+              />
+              <button
+                type="submit"
+                className="absolute top-0 right-0 rounded-l-none w-36 btn btn-lg"
+              >
+                Go
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
-    );
-  }
-};
-
-export default UserResults;
+      {users.length > 0 && (
+        <div>
+          <button
+            onClick={() => dispatch({ type: "CLEAR_USERS" })}
+            className="btn btn-ghost btn-lg"
+          >
+            Clear
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
