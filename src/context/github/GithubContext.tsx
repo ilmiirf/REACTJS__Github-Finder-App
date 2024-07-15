@@ -24,6 +24,21 @@ export const GithubProvider = ({ children }: { children: React.ReactNode }) => {
     dispatch({ type: "GET_USERS", payload: { users: data } });
   };
 
+  const searchUsers = async (text: string) => {
+    setLoading();
+    const params = new URLSearchParams({
+      q: text,
+    });
+    const response = await fetch(`${GITHUB_URL}/search/users?${params}`);
+    const { items } = await response.json();
+
+    dispatch({ type: "GET_USERS", payload: { users: items } });
+  };
+
+  const clearUsers = () => {
+    dispatch({ type: "CLEAR_USERS" });
+  };
+
   const setLoading = () => {
     dispatch({ type: "SET_LOADING" });
   };
@@ -34,6 +49,8 @@ export const GithubProvider = ({ children }: { children: React.ReactNode }) => {
         users: state.users,
         loading: state.loading,
         fetchUsers,
+        searchUsers,
+        clearUsers,
       }}
     >
       {children}
